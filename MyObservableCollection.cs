@@ -10,11 +10,13 @@ namespace lab13
 {
     public class MyObservableCollection<T> : MyHashTable<T> where T : Geometryfigure1
     {
-        // Событие для изменения количества элементов (добавление/удаление)
+        // События
         public event CollectionHandler CollectionCountChanged;
-
-        // Событие для изменения ссылки на элемент в коллекции
         public event CollectionHandler CollectionReferenceChanged;
+
+        // Поле журнала
+        private readonly Journal _journal = new Journal();
+        private readonly string _collectionName;
         // делегат
         public delegate void CollectionHandler(object source, CollectionHandlerEventArgs args);
         // Защищённые методы для вызова событий
@@ -56,6 +58,35 @@ namespace lab13
                 }
             }
             return false;
+        }
+        // Переопределяем индексатор
+        public T this[string key]
+        {
+            get => base[key];
+            set
+            {
+                if (key == null) throw new ArgumentNullException(nameof(key));
+                if (value == null) throw new ArgumentNullException(nameof(value));
+
+                // Проверяем, существует ли такой ключ
+                if (ContainsKey(key))
+                {
+                    T oldValue = base[key];
+
+                    // Проверяем, действительно ли изменилась ссылка
+                    if (!object.ReferenceEquals(oldValue, value))
+                    {
+                        // Вызываем базовый сеттер
+                        base[key] = value;
+
+                        // Генерируем событие об изменении ссылки
+                        OnCollectionReferenceChanged(new CollectionHandlerEventArgs("ItemModified", value));
+                    }
+                }
+                else
+                    // Если ключа нет — добавляем новый элемент
+                    base[key] = value;
+            }
         }
     }
 }

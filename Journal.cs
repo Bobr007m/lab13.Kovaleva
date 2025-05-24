@@ -10,35 +10,48 @@ namespace lab13
 {
     public class Journal
     {
-        private readonly List<JournalEntry> entries = new List<JournalEntry>();
+        private List<JournalEntry> entries = new List<JournalEntry>();
 
-        public void AddEntry(string collectionName, string changeType, object item)
+        // Метод добавления записи в журнал
+        public void AddRecord(string collectionName, string changeType, string changedItem)
         {
-            entries.Add(new JournalEntry(collectionName, changeType, item));
+            var entry = new JournalEntry(collectionName, changeType, changedItem);
+            entries.Add(entry);
         }
 
-        public void PrintEntries()
+        // Вывод всех записей
+        public void ShowJournal()
         {
-            Console.WriteLine("Journal entries:");
+            Console.WriteLine("Журнал изменений:");
             foreach (var entry in entries)
             {
                 Console.WriteLine(entry);
             }
         }
+    }
+    public class JournalEntry
+    {
+        // Название коллекции, в которой произошло событие
         public string CollectionName { get; }
-        public string ChangeType { get; }
-        public string ItemInfo { get; }
 
-        public JournalEntry(string collectionName, string changeType, object item)
+        // Тип изменения (например: "ItemAdded", "ItemRemoved", "ItemModified")
+        public string ChangeType { get; }
+
+        // Данные объекта, с которым связаны изменения
+        public string ChangedItem { get; }
+
+        // Конструктор для инициализации полей
+        public JournalEntry(string collectionName, string changeType, string changedItem)
         {
-            CollectionName = collectionName;
-            ChangeType = changeType;
-            ItemInfo = item?.ToString() ?? "null";
+            CollectionName = collectionName ?? throw new ArgumentNullException(nameof(collectionName));
+            ChangeType = changeType ?? throw new ArgumentNullException(nameof(changeType));
+            ChangedItem = changedItem;
         }
 
+        // Перегрузка метода ToString()
         public override string ToString()
         {
-            return $"[{CollectionName}] {ChangeType}: {ItemInfo}";
+            return $"Коллекция: {CollectionName}, Изменение: {ChangeType}, Объект: {ChangedItem}";
         }
     }
 }

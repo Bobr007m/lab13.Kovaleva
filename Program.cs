@@ -6,47 +6,181 @@ public class Program
 {
     public static void Main()
     {
-        // 1. Создаем две наблюдаемые коллекции с именами
-        var figures1 = new MyObservableCollection<Geometryfigure1>("Figures1");
-        var figures2 = new MyObservableCollection<Geometryfigure1>("Figures2");
+            var collection1 = new MyObservableCollection<Geometryfigure1>("Коллекция 1");
+            var collection2 = new MyObservableCollection<Geometryfigure1>("Коллекция 2");
 
-        // 2. Создаем журналы
-        var fullJournal = new Journal(); // Записывает все события
-        var refJournal = new Journal();  // Записывает только изменения ссылок
+            var journal1 = new Journal();
+            var journal2 = new Journal();
 
-        // 3. Подписываем журналы на события
-        // Первый журнал подписан на все события из первой коллекции
-        figures1.CollectionCountChanged += (s, e) =>
-            fullJournal.AddEntry(figures1.CollectionName, e.ChangeType, e.ChangedItem);
-        figures1.CollectionReferenceChanged += (s, e) =>
-            fullJournal.AddEntry(figures1.CollectionName, e.ChangeType, e.ChangedItem);
+            // Подписываем журналы на события
+            SubscribeJournal1(collection1, journal1);
+            SubscribeJournal2(collection1, collection2, journal2);
 
-        // Второй журнал подписан на изменения ссылок в обеих коллекциях
-        figures1.CollectionReferenceChanged += (s, e) =>
-            refJournal.AddEntry(figures1.CollectionName, e.ChangeType, e.ChangedItem);
-        figures2.CollectionReferenceChanged += (s, e) =>
-            refJournal.AddEntry(figures2.CollectionName, e.ChangeType, e.ChangedItem);
+            bool exit = false;
 
-        // 4. Работа с коллекциями
+            while (!exit)
+            {
+                Console.WriteLine("\nМеню ");
+                Console.WriteLine("1. Добавить элемент в коллекцию 1");
+                Console.WriteLine("2. Добавить элемент в коллекцию 2");
+                Console.WriteLine("3. Удалить элемент из коллекции 1");
+                Console.WriteLine("4. Удалить элемент из коллекции 2");
+                Console.WriteLine("5. Изменить элемент в коллекции 1");
+                Console.WriteLine("6. Изменить элемент в коллекции 2");
+                Console.WriteLine("7. Вывести содержимое коллекций");
+                Console.WriteLine("8. Вывести данные журнала 1");
+                Console.WriteLine("9. Вывести данные журнала 2");
+                Console.WriteLine("0. Выход");
+                Console.Write("Выберите действие: ");
 
-        // Добавляем элементы
-        figures1.Add("circle1", new Circle1(5));
-        figures1.Add("rect1", new Rectangle1(3, 4));
-        figures2.Add("paral1", new Parallelepiped1(2, 3, 4));
+                string choice = Console.ReadLine();
 
-        // Удаляем элемент
-        figures1.Remove("circle1");
+                switch (choice)
+                {
+                    case "1":
+                        AddElement(collection1, "Коллекция 1");
+                        break;
+                    case "2":
+                        AddElement(collection2, "Коллекция 2");
+                        break;
+                    case "3":
+                        RemoveElement(collection1, "Коллекция 1");
+                        break;
+                    case "4":
+                        RemoveElement(collection2, "Коллекция 2");
+                        break;
+                    case "5":
+                        ModifyElement(collection1, "Коллекция 1");
+                        break;
+                    case "6":
+                        ModifyElement(collection2, "Коллекция 2");
+                        break;
+                    case "7":
+                        DisplayCollections(collection1, collection2);
+                        break;
+                    case "8":
+                        Console.WriteLine("\n=== Журнал 1 ===");
+                        journal1.ShowJournal();
+                        break;
+                    case "9":
+                        Console.WriteLine("\n=== Журнал 2 ===");
+                        journal2.ShowJournal();
+                        break;
+                    case "0":
+                        exit = true;
+                        Console.WriteLine("Выход из программы.");
+                        break;
+                    default:
+                        Console.WriteLine("Неверный выбор. Попробуйте снова.");
+                        break;
+                }
+            }
+        }
 
-        // Изменяем элементы
-        figures2["paral1"] = new Parallelepiped1(5, 5, 5);
-        figures1["rect1"] = new Rectangle1(10, 10);
+        // Подписка журнала 1 на оба события первой коллекции
+        static void SubscribeJournal1(MyObservableCollection<Geometryfigure1> collection, Journal journal)
+        {
+            collection.CollectionCountChanged += (sender, args) =>
+            {
+                journal.AddRecord(collection._collectionName, args.ChangeType, args.Item?.ToString());
+            };
 
-        // 5. Выводим результаты
+            collection.CollectionReferenceChanged += (sender, args) =>
+            {
+                journal.AddRecord(collection._collectionName, args.ChangeType, args.Item?.ToString());
+            };
+        }
 
-        Console.WriteLine("=== Full Journal (all changes in Figures1) ===");
-        fullJournal.PrintEntries();
+        // Подписка журнала 2 только на CollectionReferenceChanged обеих коллекций
+        static void SubscribeJournal2(
+            MyObservableCollection<Geometryfigure1> coll1,
+            MyObservableCollection<Geometryfigure1> coll2,
+            Journal journal)
+        {
+            Action<object, CollectionHandlerEventArgs> handler = (sender, args) =>
+            {
+                var coll = sender as MyObservableCollection<Geometryfigure1>;
+                journal.AddRecord(coll?._collectionName ?? "Неизвестно", args.ChangeType, args.Item?.ToString());
+            };
 
-        Console.WriteLine("\n=== Reference Journal (reference changes in both collections) ===");
-        refJournal.PrintEntries();
+            coll1.CollectionReferenceChanged += handler;
+            coll2.CollectionReferenceChanged += handler;
+        }
+
+        // Добавление случайного элемента
+        static void AddElement(MyObservableCollection<Geometryfigure1> collection, string name)
+        {
+            T GenerateRandomFigure<T>() where T : Geometryfigure1
+            {
+                Random rand = new Random();
+                int type = rand.Next(1, 4);
+                return type switch
+                {
+                    1 => (T)(object)new Circle1(rand.Next(1, 11)),
+                    2 => (T)(object)new Rectangle1(rand.Next(1, 11), rand.Next(1, 11)),
+                    3 => (T)(object)new Parallelepiped1(rand.Next(1, 11), rand.Next(1, 11), rand.Next(1, 11)),
+                    _ => throw new InvalidOperationException(),
+                };
+            }
+
+            var figure = GenerateRandomFigure<Geometryfigure1>();
+            collection.Add(figure);
+            Console.WriteLine($"Добавлен элемент в {name}: {figure}");
+        }
+
+        // Удаление элемента по ключу
+        static void RemoveElement(MyObservableCollection<Geometryfigure1> collection, string name)
+        {
+            Console.Write("Введите ключ для удаления: ");
+            string key = Console.ReadLine();
+
+            if (collection.ContainsKey(key))
+            {
+                collection.Remove(key);
+                Console.WriteLine($"Элемент с ключом '{key}' удален из {name}.");
+            }
+            else
+            {
+                Console.WriteLine($"Элемент с ключом '{key}' не найден в {name}.");
+            }
+        }
+
+        // Изменение элемента по ключу
+        static void ModifyElement(MyObservableCollection<Geometryfigure1> collection, string name)
+        {
+            Console.Write("Введите ключ для изменения: ");
+            string key = Console.ReadLine();
+
+            if (collection.ContainsKey(key))
+            {
+                var newValue = new Circle1(new Random().Next(1, 11));
+                collection[key] = newValue;
+                Console.WriteLine($"Элемент с ключом '{key}' изменён в {name} на {newValue}.");
+            }
+            else
+            {
+                Console.WriteLine($"Элемент с ключом '{key}' не найден в {name}.");
+            }
+        }
+
+        // Вывод содержимого коллекций
+        static void DisplayCollections(
+            MyObservableCollection<Geometryfigure1> coll1,
+            MyObservableCollection<Geometryfigure1> coll2)
+        {
+            Console.WriteLine("\n--- Содержимое коллекции 1 ---");
+            foreach (var item in coll1)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine("\n--- Содержимое коллекции 2 ---");
+            foreach (var item in coll2)
+            {
+                Console.WriteLine(item);
+            }
+        }
     }
-}
+
+
+
