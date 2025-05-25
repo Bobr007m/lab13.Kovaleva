@@ -28,9 +28,6 @@ namespace lab13
                 Console.WriteLine(entry);
             }
         }
-    }
-    public class JournalEntry
-    {
         // Название коллекции, в которой произошло событие
         public string CollectionName { get; }
 

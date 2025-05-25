@@ -8,6 +8,8 @@ using lab;
 
 namespace lab13
 {
+    // делегат
+    public delegate void CollectionHandler(object source, CollectionHandlerEventArgs args);
     public class MyObservableCollection<T> : MyHashTable<T> where T : Geometryfigure1
     {
         // События
@@ -15,22 +17,20 @@ namespace lab13
         public event CollectionHandler CollectionReferenceChanged;
 
         // Поле журнала
-        private readonly Journal _journal = new Journal();
-        private readonly string _collectionName;
-        // делегат
-        public delegate void CollectionHandler(object source, CollectionHandlerEventArgs args);
-        // Защищённые методы для вызова событий
-        protected virtual void OnCollectionCountChanged(CollectionHandlerEventArgs e)
+        public readonly Journal journal = new Journal();
+        public readonly string collectionName;
+        //  методы для вызова событий
+        public virtual void OnCollectionCountChanged(CollectionHandlerEventArgs e)
         {
             CollectionCountChanged?.Invoke(this, e);
         }
 
-        protected virtual void OnCollectionReferenceChanged(CollectionHandlerEventArgs e)
+        public virtual void OnCollectionReferenceChanged(CollectionHandlerEventArgs e)
         {
             CollectionReferenceChanged?.Invoke(this, e);
         }
         // Переопределяем метод Add(T obj), чтобы бросать событие
-        public void Add(T obj)
+        public override void Add(T obj)
         {
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
@@ -43,7 +43,7 @@ namespace lab13
             OnCollectionCountChanged(new CollectionHandlerEventArgs("ItemAdded", obj));
         }
         // Переопределяем метод Remove(T obj), чтобы бросать событие
-        public bool Remove(T obj)
+        public override bool Remove(T obj)
         {
             foreach (var entry in table)
             {

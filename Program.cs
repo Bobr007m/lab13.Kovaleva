@@ -6,8 +6,10 @@ public class Program
 {
     public static void Main()
     {
-            var collection1 = new MyObservableCollection<Geometryfigure1>("Коллекция 1");
-            var collection2 = new MyObservableCollection<Geometryfigure1>("Коллекция 2");
+            var collection1 = new MyObservableCollection<Geometryfigure1>();
+            Console.WriteLine("Коллекция 1");
+            var collection2 = new MyObservableCollection<Geometryfigure1>();
+            Console.WriteLine("Коллекция 2");
 
             var journal1 = new Journal();
             var journal2 = new Journal();
@@ -82,12 +84,12 @@ public class Program
         {
             collection.CollectionCountChanged += (sender, args) =>
             {
-                journal.AddRecord(collection._collectionName, args.ChangeType, args.Item?.ToString());
+                journal.AddRecord(collection.collectionName, args.ChangeType, args.Item?.ToString());
             };
 
             collection.CollectionReferenceChanged += (sender, args) =>
             {
-                journal.AddRecord(collection._collectionName, args.ChangeType, args.Item?.ToString());
+                journal.AddRecord(collection.collectionName, args.ChangeType, args.Item?.ToString());
             };
         }
 
@@ -100,7 +102,7 @@ public class Program
             Action<object, CollectionHandlerEventArgs> handler = (sender, args) =>
             {
                 var coll = sender as MyObservableCollection<Geometryfigure1>;
-                journal.AddRecord(coll?._collectionName ?? "Неизвестно", args.ChangeType, args.Item?.ToString());
+                journal.AddRecord(coll?.collectionName ?? "Неизвестно", args.ChangeType, args.Item?.ToString());
             };
 
             coll1.CollectionReferenceChanged += handler;
