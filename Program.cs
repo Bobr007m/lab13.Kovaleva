@@ -93,45 +93,58 @@ public class Program
             };
         }
 
-        // Подписка журнала 2 только на CollectionReferenceChanged обеих коллекций
-        static void SubscribeJournal2(
-            MyObservableCollection<Geometryfigure1> coll1,
-            MyObservableCollection<Geometryfigure1> coll2,
-            Journal journal)
+    // Подписка журнала 2 только на CollectionReferenceChanged обеих коллекций
+    static void SubscribeJournal2(MyObservableCollection<Geometryfigure1> coll1, MyObservableCollection<Geometryfigure1> coll2, Journal journal)
+    {
+        Action<object, CollectionHandlerEventArgs> handler = (sender, args) =>
         {
-            Action<object, CollectionHandlerEventArgs> handler = (sender, args) =>
-            {
-                var coll = sender as MyObservableCollection<Geometryfigure1>;
-                journal.AddRecord(coll?.collectionName ?? "Неизвестно", args.ChangeType, args.Item?.ToString());
-            };
+            var coll = sender as MyObservableCollection<Geometryfigure1>;
+            journal.AddRecord(coll?.collectionName ?? "Неизвестно", args.ChangeType, args.Item?.ToString());
+        };
 
-            coll1.CollectionReferenceChanged += handler;
-            coll2.CollectionReferenceChanged += handler;
-        }
-
-        // Добавление случайного элемента
-        static void AddElement(MyObservableCollection<Geometryfigure1> collection, string name)
+        coll1.CollectionReferenceChanged += (sender, args) =>
         {
-            T GenerateRandomFigure<T>() where T : Geometryfigure1
+            Console.WriteLine($"Событие: {args.ChangeType}, Элемент: {args.Item}");
+        };
+        coll2.CollectionReferenceChanged += (sender, args) =>
+        {
+            Console.WriteLine($"Событие: {args.ChangeType}, Элемент: {args.Item}");
+        };
+    }
+
+    // Добавление случайного элемента
+    static void AddElement(MyObservableCollection<Geometryfigure1> collection, string name)
+    {
+        T GenerateRandomFigure<T>() where T : Geometryfigure1
+        {
+            Random rand = new Random();
+            int type = rand.Next(1, 4);
+
+            if (type == 1)
             {
-                Random rand = new Random();
-                int type = rand.Next(1, 4);
-                return type switch
-                {
-                    1 => (T)(object)new Circle1(rand.Next(1, 11)),
-                    2 => (T)(object)new Rectangle1(rand.Next(1, 11), rand.Next(1, 11)),
-                    3 => (T)(object)new Parallelepiped1(rand.Next(1, 11), rand.Next(1, 11), rand.Next(1, 11)),
-                    _ => throw new InvalidOperationException(),
-                };
+                return (T)(object)new Circle1(rand.Next(1, 11));
             }
-
-            var figure = GenerateRandomFigure<Geometryfigure1>();
-            collection.Add(figure);
-            Console.WriteLine($"Добавлен элемент в {name}: {figure}");
+            else if (type == 2)
+            {
+                return (T)(object)new Rectangle1(rand.Next(1, 11), rand.Next(1, 11));
+            }
+            else if (type == 3)
+            {
+                return (T)(object)new Parallelepiped1(rand.Next(1, 11), rand.Next(1, 11), rand.Next(1, 11));
+            }
+            else
+            {
+                throw new InvalidOperationException("Неподдерживаемый тип фигуры");
+            }
         }
 
-        // Удаление элемента по ключу
-        static void RemoveElement(MyObservableCollection<Geometryfigure1> collection, string name)
+        var figure = GenerateRandomFigure<Geometryfigure1>();
+        collection.Add(figure);
+        Console.WriteLine($"Добавлен элемент в {name}: {figure}");
+    }
+
+    // Удаление элемента по ключу
+    static void RemoveElement(MyObservableCollection<Geometryfigure1> collection, string name)
         {
             Console.Write("Введите ключ для удаления: ");
             string key = Console.ReadLine();

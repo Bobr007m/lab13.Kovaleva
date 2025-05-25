@@ -11,6 +11,16 @@ namespace lab13
     public class Journal
     {
         private List<JournalEntry> entries = new List<JournalEntry>();
+        // Конструктор по умолчанию
+        public Journal()
+        {
+            // Инициализация журнала без параметров
+        }
+        // Конструктор с параметрами
+        public Journal(string collectionName, string changeType, string changedItem)
+        {
+            AddRecord(collectionName, changeType, changedItem);
+        }
 
         // Метод добавления записи в журнал
         public void AddRecord(string collectionName, string changeType, string changedItem)
@@ -28,27 +38,30 @@ namespace lab13
                 Console.WriteLine(entry);
             }
         }
-        // Название коллекции, в которой произошло событие
-        public string CollectionName { get; }
-
-        // Тип изменения (например: "ItemAdded", "ItemRemoved", "ItemModified")
-        public string ChangeType { get; }
-
-        // Данные объекта, с которым связаны изменения
-        public string ChangedItem { get; }
-
-        // Конструктор для инициализации полей
-        public JournalEntry(string collectionName, string changeType, string changedItem)
+        public class JournalEntry
         {
-            CollectionName = collectionName ?? throw new ArgumentNullException(nameof(collectionName));
-            ChangeType = changeType ?? throw new ArgumentNullException(nameof(changeType));
-            ChangedItem = changedItem;
-        }
+            // Название коллекции, в которой произошло событие
+            public string CollectionName { get; }
 
-        // Перегрузка метода ToString()
-        public override string ToString()
-        {
-            return $"Коллекция: {CollectionName}, Изменение: {ChangeType}, Объект: {ChangedItem}";
+            // Тип изменения (например: "ItemAdded", "ItemRemoved", "ItemModified")
+            public string ChangeType { get; }
+
+            // Данные объекта, с которым связаны изменения
+            public string ChangedItem { get; }
+
+            // Конструктор для инициализации полей
+            public JournalEntry(string collectionName, string changeType, string changedItem)
+            {
+                CollectionName = collectionName ?? throw new ArgumentNullException(nameof(collectionName));
+                ChangeType = changeType ?? throw new ArgumentNullException(nameof(changeType));
+                ChangedItem = changedItem;
+            }
+
+            // Перегрузка метода ToString()
+            public override string ToString()
+            {
+                return $"Коллекция: {CollectionName}, Изменение: {ChangeType}, Объект: {ChangedItem}";
+            }
         }
     }
 }
