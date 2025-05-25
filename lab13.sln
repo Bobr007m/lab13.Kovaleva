@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "mycollection", "..\mycollec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geometryclass", "..\Ceometryclass\Geometryclass.csproj", "{83CC1226-A1B5-460C-A1E5-D9B58C9015D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject7", "..\TestProject7\TestProject7.csproj", "{FCF6483C-646E-4EEF-97E9-80CC48CDFF0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{83CC1226-A1B5-460C-A1E5-D9B58C9015D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83CC1226-A1B5-460C-A1E5-D9B58C9015D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83CC1226-A1B5-460C-A1E5-D9B58C9015D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF6483C-646E-4EEF-97E9-80CC48CDFF0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF6483C-646E-4EEF-97E9-80CC48CDFF0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF6483C-646E-4EEF-97E9-80CC48CDFF0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF6483C-646E-4EEF-97E9-80CC48CDFF0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
