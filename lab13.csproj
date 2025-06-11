@@ -14,7 +14,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -60,9 +60,9 @@
       <Project>{83cc1226-a1b5-460c-a1e5-d9b58c9015d1}</Project>
       <Name>Geometryclass</Name>
     </ProjectReference>
-    <ProjectReference Include="..\mycollection\mycollection.csproj">
-      <Project>{9b82f02d-5960-4fe9-8004-b532569419fa}</Project>
-      <Name>mycollection</Name>
+    <ProjectReference Include="..\MyCollectionH\MyCollectionH.csproj">
+      <Project>{444c4478-3cae-4158-898c-5029fa94dcd1}</Project>
+      <Name>MyCollectionH</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

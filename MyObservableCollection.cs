@@ -4,25 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Geometryclass;
-using lab;
+using MyCollectionH;
 
 namespace lab13
 {
     // делегат
-    public delegate void CollectionHandler(object source, CollectionHandlerEventArgs args);
+    public delegate void CollectionHandler(object source, CollectionHandlerEventArgs args); //source — объект, вызвавший событие, args — дополнительная информация о событии
     public class MyObservableCollection<T> : MyHashTable<T> where T : Geometryfigure1
     {
         // События
-        public event CollectionHandler CollectionCountChanged;
-        public event CollectionHandler CollectionReferenceChanged;
+        public event CollectionHandler CollectionCountChanged;//вызывается при добавлении или удалении элемента.
+        public event CollectionHandler CollectionReferenceChanged;//вызывается при замене ссылки на элемент по ключу.
 
         // Поле журнала
         public readonly Journal journal = new Journal();
         public readonly string collectionName;
         //  методы для вызова событий
-        public virtual void OnCollectionCountChanged(CollectionHandlerEventArgs e)
+        public virtual void OnCollectionCountChanged(CollectionHandlerEventArgs e)//Если есть подписчики на событие CollectionCountChanged, то оно вызывается с аргументами e.
         {
-            CollectionCountChanged?.Invoke(this, e);
+            CollectionCountChanged?.Invoke(this, e);//используется для вызова всех подписанных методов (обработчиков) на это событие или делегат
         }
 
         public virtual void OnCollectionReferenceChanged(CollectionHandlerEventArgs e)
@@ -40,7 +40,7 @@ namespace lab13
             base.Add(key, obj);
 
             // Вызываем событие
-            OnCollectionCountChanged(new CollectionHandlerEventArgs("ItemAdded", obj));
+            OnCollectionCountChanged(new CollectionHandlerEventArgs("ItemAdded", obj));//Вызывает событие CollectionCountChanged с информацией о добавлении.
         }
         // Переопределяем метод Remove(T obj), чтобы бросать событие
         public override bool Remove(T obj)

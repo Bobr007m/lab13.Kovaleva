@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using lab;
+
 
 namespace lab13
 {
-    public class CollectionHandlerEventArgs : EventArgs
+    public class CollectionHandlerEventArgs : EventArgs//класс аргументов события , который используется для передачи данных об изменении коллекции при возникновении события
     {
         // Свойство: тип изменения 
         public string ChangeType { get; }

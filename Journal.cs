@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Navigation;
-using lab;
+
 
 namespace lab13
 {
     public class Journal
     {
-        private List<JournalEntry> entries = new List<JournalEntry>();
+        private List<JournalEntry> entries = new List<JournalEntry>();//список всех событий
         // Конструктор по умолчанию
         public Journal()
         {
